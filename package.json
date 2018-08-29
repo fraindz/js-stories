@@ -1,0 +1,26 @@
+{
+  "name": "js-stories",
+  "version": "1.0.0",
+  "description": "A collection of various java script stories that explain & demonstrate core java script concepts.",
+  "main": "this-stories.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fraindz/js-stories.git"
+  },
+  "keywords": [
+    "javascript",
+    "es6"
+  ],
+  "author": "Maulik Shah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fraindz/js-stories/issues"
+  },
+  "homepage": "https://github.com/fraindz/js-stories#readme",
+  "dependencies": {
+    "regenerator-runtime": "^0.12.1"
+  }
+}

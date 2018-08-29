@@ -1,5 +1,6 @@
 
 const assert = require('assert');
+const regeneratorRuntime = require("regenerator-runtime");
 
 const eq = assert.equal;
 
@@ -78,3 +79,67 @@ console.log('Generator can generate infinite values');
     eq(it.next().value, 20);
     eq(it.next().value, 30);
 })();
+
+console.log('Babel transpiled version of generator function');
+(function () {
+    var _marked = regeneratorRuntime.mark(gen1);
+
+    x = 0;
+    function gen1() {
+        return regeneratorRuntime.wrap(function gen1$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        if (!(true && x < 111)) {
+                            _context.next = 6;
+                            break;
+                        }
+
+                        _context.next = 3;
+                        return x;
+
+                    case 3:
+                        x = x + 10;
+                        _context.next = 0;
+                        break;
+
+                    case 6:
+                    case "end":
+                        return _context.stop();
+                }
+            }
+        }, _marked, this);
+    }
+    it = gen1();
+    eq(it.next().value, 0);
+    eq(it.next().value, 10);
+    eq(it.next().value, 20);
+    eq(it.next().value, 30);
+})();
+
+console.log('yield* delegates to first generator or iterable object');
+function* func1() {
+    yield 42;
+    yield 45;
+    return 'return from func1()';
+}
+
+function* f0() {
+  return 'return from f0()';
+}
+
+function* func2() {
+    yield* f0();
+    yield* [101];
+    yield* func1();
+    yield 'from func2 yield';
+    return 'return from func2()';
+}
+
+const iterator = func2();
+eq(iterator.next().value, 101);
+eq(iterator.next().value, 42);
+eq(iterator.next().value, 45);
+assert.deepEqual(iterator.next(), {value: 'from func2 yield', done: false});
+assert.deepEqual(iterator.next(), {value: 'return from func2()', done: true});
+  

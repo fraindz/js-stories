@@ -163,6 +163,31 @@ console.log('Custom "bind" implementation');
     eq(baz.a, 2);
 })();
 
+console.log('Custom bind implementation (hacky one)');
+function bind(fn, context) {
+    return function(...args) {
+        const key = 'some_secret_key';
+        Object.defineProperty(context, key, {
+        configurable: true,
+        enumerable: false,
+        value: fn
+        });
+        const result = context[key](...args);
+
+        delete context[key];
+
+        return result;
+    };
+}
+function multiply(x, y) {
+    return x * y;
+}
+
+const multiplyBy2 = multiply.bind(null, 2);
+const multiplyBy5 = multiply.bind(null, 5);
+eq(multiplyBy2(3), 6);
+console.log('Custom bind demos partially applied functions');
+
 console.log('Custom "ES6bind" implementation');
 (function() {
     function foo(arg1) {
