@@ -186,12 +186,11 @@ function multiply(x, y) {
 const multiplyBy2 = multiply.bind(null, 2);
 const multiplyBy5 = multiply.bind(null, 5);
 eq(multiplyBy2(3), 6);
-console.log('Custom bind demos partially applied functions');
+console.log('Custom bind demos partially applied(curried) functions');
 
 console.log('Custom "ES6bind" implementation');
 (function() {
     function foo(arg1) {
-        console.log(this);
         this.a = arg1;
     }
     Function.prototype.customES6Bind = function (oThis) {
@@ -243,4 +242,24 @@ console.log('Syntactic replacement of arrow fns using self - Lexical this - part
     o2 = { a: 88 };
     bar = foo.call(o1);
     eq(bar.call(o2), 77);
+})();
+
+(function () {
+    a = 404;
+    var o2 = {
+        a: 200,
+        foo: function () {
+            this.a = this.a + 1;
+            return this.a;
+        }
+    };
+    eq((o2.foo || {})(), 405);
+    eq((1, o2.foo)(), 406);
+
+    var fooCall = o2.foo;
+    eq(fooCall(), 407);
+
+    new Promise(() => setTimeout(o2.foo, 111))
+    .then(() => eq(a, 408));
+    console.log('Function reference when evaluated loses the context');
 })();
