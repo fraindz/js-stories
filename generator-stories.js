@@ -142,4 +142,14 @@ eq(iterator.next().value, 42);
 eq(iterator.next().value, 45);
 assert.deepEqual(iterator.next(), {value: 'from func2 yield', done: false});
 assert.deepEqual(iterator.next(), {value: 'return from func2()', done: true});
-  
+
+console.log('Generate fibo series using recursion via yield*');
+function *fibonacci(n, current = 0, next = 1) {
+    if (n === 0) {
+      return current;
+    }
+    yield current;
+    yield *fibonacci(n-1, next, current + next);
+}
+
+assert.deepEqual([...fibonacci(5), [0, 1, 1, 2, 3]]);

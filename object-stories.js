@@ -215,8 +215,8 @@ const eq = assert.equal;
         Vehicle.call(this, speed);
         this.model = model;
     }
-    Car.prototype = Object.create(Vehicle.prototype);
-    Car.prototype.constructor = Car;
+    Object.setPrototypeOf(Car.prototype, Vehicle.prototype);
+
     const car1 = new Car('Hexa', 40);
     eq(car1.__proto__ === Car.prototype, true);
     eq(car1.__proto__.__proto__ === Vehicle.prototype, true);
@@ -246,3 +246,15 @@ const eq = assert.equal;
     eq(Object.getOwnPropertyDescriptor(Vehicle.prototype,'start').enumerable, false);
 })();
 
+(function() {
+    console.log('Parent - Child link is created on prototype object and not on actual object');
+    function Parent() {}
+    function Child() {}
+    Child.prototype = Object.create(Parent.prototype);
+    eq(Child instanceof Parent, false);
+    eq(Child.prototype instanceof Parent, true);
+    eq(Parent.isPrototypeOf(Child), false);
+    eq(Parent.isPrototypeOf(Child.prototype), false);
+    eq(Parent.prototype.isPrototypeOf(Child), false);
+    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
+})();

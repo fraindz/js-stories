@@ -80,3 +80,22 @@ eq(Object.getOwnPropertySymbols(a)[0].toString(), "Symbol(My Sym)");
 console.log('Object subtypes prototype is the subtype itself');
 eq(typeof Function.prototype, 'function');
 eq(Array.isArray(Array.prototype), true);
+
+console.log('JSON converts undefined, function, recursive prop access to null');
+eq(JSON.stringify(42), "42");
+eq(JSON.stringify("42"), "\"42\"");
+eq(JSON.stringify([111, undefined, function() {}, 444]), "[111,null,null,444]");
+eq(JSON.stringify({a: 101, b: function() {}}), "{\"a\":101}");
+
+console.log('JSON stringify implicit coercion using toJSON');
+o={};
+o1={ a:11, b:22, c: o};
+o.e=o1;
+o1.toJSON = function() { return { newProp:111, b: this.b }; };
+eq(JSON.stringify(o1), "{\"newProp\":111,\"b\":22}");
+
+console.log('JSON stringify explicit coercion using replacer array');
+eq(JSON.stringify(o1, ['b', 'newProp1']), "{\"b\":22}");
+
+console.log('JSON stringify explicit coercion using replacer function stills refers output of toJSON');
+eq(JSON.stringify(o1, function(k, v) { return k!=='b'? v:undefined }), '{"newProp":111}');
