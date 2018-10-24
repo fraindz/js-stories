@@ -5,7 +5,7 @@ const eq = assert.equal;
 eq(typeof 42, "number");
 console.log('typeof 42 is "number" and typeof "number" is string');
 eq(typeof typeof 42, "string");
-console.log('typeof null is object because of bug');
+console.log('typeof null is "object" because of bug');
 eq(typeof null, "object");
 var a;
 eq(typeof a, "undefined");
@@ -99,3 +99,70 @@ eq(JSON.stringify(o1, ['b', 'newProp1']), "{\"b\":22}");
 
 console.log('JSON stringify explicit coercion using replacer function stills refers output of toJSON');
 eq(JSON.stringify(o1, function(k, v) { return k!=='b'? v:undefined }), '{"newProp":111}');
+
+console.log('Parsing is tolerant while Coercion is intolerant');
+a = '131';
+b = '131aa';
+eq(Number(a), 131);
+eq(parseInt(a), 131);
+eq(Number.isNaN(Number(b)), true);
+eq(parseInt(b), 131);
+
+console.log('Implicit coercion of + operator');
+eq("13"+"0", "130");
+eq(13+0, 13);
+eq(13+"13","1313");
+eq([1,2]+[3,4],"1,23,4");
+eq(2+true, 3);
+
+console.log('string coercion using + depends on valueOf and using String depends on toString ');
+a = {
+    valueOf: () => 13,
+    toString: () => 22
+};
+eq(a+"", 13);
+eq(String(a), 22);
+
+console.log('operators -,*,/ always coerce the operands to number');
+eq(3-"1", 2);
+eq("3"*1, 3);
+eq("3"/"1",3);
+eq([3]-[2],1);
+
+console.log('Implement onlyOneTrue using boolean coercion with !!');
+function onlyOneTrue() {
+    var sum = 0;
+    for(var i=0; i<arguments.length; i++) {
+        sum += Number(!!arguments[i]);
+    }
+    return sum === 1;
+}
+eq(onlyOneTrue(33, 0, "", null, undefined), true);
+eq(onlyOneTrue(33, "0"), false);
+eq(onlyOneTrue({}, false), true);
+eq(onlyOneTrue([], false), true);
+eq(onlyOneTrue(0, false), false);
+
+console.log('Operators || and && always return value of one of the two operands');
+eq(null || "abc" || 42, "abc");
+eq("abc" && 42, 42);
+
+console.log('JS coercion gotchas');
+eq("0"==false, true);
+eq(0==false, true);
+eq(""==false, true);
+eq([]==false, true);
+eq("0"!="", true);
+eq("0"!=[], true);
+eq(""==0, true);
+eq(""==[], true);
+eq(0==[], true);
+
+o1 = { a:11 };
+o2 = { a:22 };
+
+eq(o1<o2, false);
+eq(o1==o2, false);
+eq(o1>o2, false);
+eq(o1<=o2, true);
+eq(o1>=o2, true);
