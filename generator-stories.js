@@ -23,9 +23,9 @@ console.log('Generators "yield" & "return" demo');
     eq(x, 55);
     assert.deepEqual(it.next(), {value: {a: 1}, done: false});
     assert.deepEqual(it.next(), {value: 111, done: true});
-    console.log('Generator "return" accessible when explicitly iterated');
+    console.log('Generator "return" value is accessible when explicitly iterated');
     assert.deepEqual([...gen1()], [undefined, 'xxx', {a: 1}]);
-    console.log('Generator "return" NOT accessible when auto nexting');
+    console.log('Generator "return" value NOT accessible when auto nexting');
 })();
 
 console.log('Generators yielding to Promise based async methods');
@@ -152,4 +152,4 @@ function *fibonacci(n, current = 0, next = 1) {
     yield *fibonacci(n-1, next, current + next);
 }
 
-assert.deepEqual([...fibonacci(5), [0, 1, 1, 2, 3]]);
+assert.deepEqual([...fibonacci(5)], [0, 1, 1, 2, 3]);

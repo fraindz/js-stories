@@ -142,7 +142,7 @@ const eq = assert.equal;
     eq(car1.__proto__.seatCapacity, 4);
     eq(car1.seatCapacity, 4);
     eq(car1.hasOwnProperty('seatCapacity'), false);
-    console.log('Adding new Prototype prop is not reflected in existing instances');
+    console.log('Prototype properties are not copied to instance but are delegated');
 
     Car.prototype = { seatCapacity: 2 };
     car4 = new Car('Camry', 'Blue');
@@ -150,7 +150,7 @@ const eq = assert.equal;
     eq(car1.seatCapacity, 4);
     eq(Car.prototype === car4.__proto__, true);
     eq(car4.seatCapacity, 2);
-    console.log('Updating prototype prop is not reflected in existing instances');
+    console.log('New object assigned to prototype will only be reflected on instances created after that');
     console.log('New objects created after changing prototype will have same _proto_ as changed prototype');
 
     const car2 = new Car('Innova', 'Red');
@@ -247,7 +247,7 @@ const eq = assert.equal;
 })();
 
 (function() {
-    console.log('Parent - Child link is created on prototype object and not on actual object');
+    console.log('Parent - Child link(via Delegation) is created on prototype object AND NOT on actual object');
     function Parent() {}
     function Child() {}
     Child.prototype = Object.create(Parent.prototype);
@@ -257,4 +257,24 @@ const eq = assert.equal;
     eq(Parent.isPrototypeOf(Child.prototype), false);
     eq(Parent.prototype.isPrototypeOf(Child), false);
     eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
+
+    a = new Child();
+    eq(a instanceof Child, true);
+    eq(a instanceof Parent, true);
+})();
+
+(function() {
+    console.log('Parent - Child link(via Class) is created on prototype object AND ALSO on actual object');
+    class Parent {}
+    class Child extends Parent { }
+    eq(Child instanceof Parent, false);
+    eq(Child.prototype instanceof Parent, true);
+    eq(Parent.isPrototypeOf(Child), true);
+    eq(Parent.isPrototypeOf(Child.prototype), false);
+    eq(Parent.prototype.isPrototypeOf(Child), false);
+    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
+
+    a = new Child();
+    eq(a instanceof Child, true);
+    eq(a instanceof Parent, true);
 })();

@@ -2,9 +2,9 @@ const assert = require('assert');
 
 const eq = assert.equal;
 
+console.log('DEMO IIFE - Immediately Invoked Function Expression. Function with params executed on declaration.');
 const iife = (function playIIFE(param1, param2, param3) {
     const iifeLocalParam = param1 + ' ' + param2 + ' ' + param3;
-    console.log('DEMO IIFE - Immediately Invoked Function Expression. Function executed on declaration with params :', [param1, param2, param3]);
     function getIIFELocal() {
         return iifeLocalParam;
     }

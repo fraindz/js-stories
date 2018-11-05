@@ -26,14 +26,15 @@ if (typeof polyfill === "undefined") {
 }
 eq(typeof polyfill, "function");
 
+console.log('Array elements with string index do not affect length');
 a = [];
 a[0] = 111;
 a['foo'] = 222;
-console.log('Array elements with string index do not affect length');
 eq(a.length, 1);
+
+console.log('Array can have empty-slots');
 a[2] = 222;
 a[5] = 555;
-console.log('Array can have empty-slots');
 eq(a[1], undefined);
 eq(a.length, 6);
 
@@ -166,3 +167,6 @@ eq(o1==o2, false);
 eq(o1>o2, false);
 eq(o1<=o2, true);
 eq(o1>=o2, true);
+
+console.log('Javascript ,(comma) operator executes all expressions and returns the last one');
+eq((q=1, console.log(q), ++q), 2);
