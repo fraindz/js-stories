@@ -278,3 +278,19 @@ const eq = assert.equal;
     eq(a instanceof Child, true);
     eq(a instanceof Parent, true);
 })();
+
+console.log('super can be used in consice functions of plain objects');
+{
+    const o1 = {
+        f1() {
+            return ('o1:f1');
+        }
+    }
+    const o2 = {
+        f1() {
+            return super.f1();
+        }
+    }
+    Object.setPrototypeOf(o2, o1);
+    eq(o2.f1(), 'o1:f1');
+}

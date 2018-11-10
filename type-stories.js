@@ -145,8 +145,10 @@ eq(onlyOneTrue([], false), true);
 eq(onlyOneTrue(0, false), false);
 
 console.log('Operators || and && always return value of one of the two operands');
-eq(null || "abc" || 42, "abc");
-eq("abc" && 42, 42);
+eq(11 || "abc", 11);
+eq(11 && "abc", "abc");
+eq(null || 11, 11);
+eq(null && 11, null);
 
 console.log('JS coercion gotchas');
 eq("0"==false, true);

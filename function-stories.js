@@ -51,3 +51,32 @@ assert.deepEqual(iife.getIIFELocal(), 'Param1 2 true');
     console.log('Call parent method by passing context of child using function method "call"');
     eq(Math.trunc(Product.prototype.priceWithTax.call(toy1)),110);
 })();
+
+console.log('Tagged template literals are special function calls invoked without parenthesis "("');
+{
+    const i = 12;
+    function tagFn(strings, ...values) {
+        return `[${strings}][${values}]`;
+    }
+    eq(tagFn `value is ${i} ...`, '[value is , ...][12]');
+}
+
+console.log('Arrow fns assume this to be same as the value of this at invocation place');
+console.log('Arrow fns lexically inherit this from surrounding scope');
+{
+    this.a = 11;
+    const o = {
+        a: 22,
+        f1() {
+            return this.a;
+        },
+        f2: () => this.a,
+        f3() {
+            const innerFn = () => this.a;
+            return innerFn();
+        }
+    }
+    eq(o.f1(), 22);
+    eq(o.f2(), 11);
+    eq(o.f3(), 22);
+}
