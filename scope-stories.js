@@ -2,7 +2,7 @@ const assert = require('assert');
 
 const eq = assert.equal;
 
-console.log('NON-STRICT - If first mention of a variable is an LHS reference, it is added to global scope. For all other kind of first mentions, it has to be a declaration');
+console.log('(ns)If first mention of a variable is an LHS reference, it is added to global scope. For all other kind of first mentions, it has to be a declaration');
 function print(o) {
     var _FUNC_SCOPE_VAR = 1;
     if(!o) {

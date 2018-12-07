@@ -3,6 +3,58 @@ const assert = require('assert');
 const regeneratorRuntime = require("regenerator-runtime");
 
 const eq = assert.equal;
+{
+    console.log('Iterate through array values manually using Symbol.iterator');
+    const arr = [11, 22];
+    const it = arr[Symbol.iterator]();
+    assert.deepEqual(it.next(), { value: 11, done: false });
+    console.log('Iterating through last value still returns done:false');
+    assert.deepEqual(it.next(), { value: 22, done: false });
+    console.log('next returns done:true when all values are traversed')
+    assert.deepEqual(it.next(), { value: undefined, done: true });
+
+    console.log('Symbol.iterator returns new instance of iterator each time');
+    it2 = arr[Symbol.iterator]();
+    eq(it2.next().value, 11);
+
+    console.log('Calling next on exhausted iterator returns {value: undefined, done: true}');
+    assert.deepEqual(it.next(), { value: undefined, done: true });
+}
+
+{
+    console.log('Create custom iterator to infinitely loop through even numbers');
+    var EvenNos = {
+        [Symbol.iterator]() {
+            var n = 0;
+
+            return {
+                [Symbol.iterator]() { return this; },
+                next() {
+                    n += 2;
+                    return { value: n, done: false };
+                },
+
+                return(v) {
+                    console.log(
+                        "sequence abandoned."
+                    );
+                    return { value: v, done: true };
+                }
+            };
+        }
+    };
+
+    let it  = EvenNos[Symbol.iterator]();
+    let v = "";
+    for (let res; (res = it.next()) && !res.done; ) {
+        v = v + res.value + ",";
+        if (res.value > 5) {
+            console.log('return is used to notify producer that consumption is over');
+            break;
+        }
+    }
+    eq(v, '2,4,6,');
+}
 
 console.log('Generators "yield" & "return" demo');
 (function() {
@@ -27,6 +79,18 @@ console.log('Generators "yield" & "return" demo');
     assert.deepEqual([...gen1()], [undefined, 'xxx', {a: 1}]);
     console.log('Generator "return" value NOT accessible when auto nexting');
 })();
+
+console.log('Consumer can free generator midway if consumption is over');
+{
+    function *gen1() {
+        yield 11;
+        yield 22;
+    }
+    let it = gen1();
+    assert.deepEqual(it.next(), {value: 11, done: false});
+    assert.deepEqual(it.return(404), {value: 404, done: true});
+    assert.deepEqual(it.next(), {value: undefined, done: true});
+}
 
 console.log('Generators yielding to Promise based async methods');
 (function() {

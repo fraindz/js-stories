@@ -263,3 +263,24 @@ console.log('Syntactic replacement of arrow fns using self - Lexical this - part
     .then(() => eq(a, 408));
     console.log('Function reference when evaluated loses the context');
 })();
+
+console.log('You cant call an arrow function with new');
+{
+    let f1 = () => {
+    }
+    assert.throws(() => new f1(), TypeError);
+}
+console.log('You cant return primitives from a function when called with new');
+{
+    function f1() {
+        return "x";
+    }
+    let o = new f1();
+    assert.deepEqual( o, {});
+
+    function f2() {
+        return { a: 11 }
+    }
+    o = new f2();
+    assert.deepEqual(o, { a: 11 });
+}

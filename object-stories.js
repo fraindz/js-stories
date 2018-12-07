@@ -294,3 +294,11 @@ console.log('super can be used in consice functions of plain objects');
     Object.setPrototypeOf(o2, o1);
     eq(o2.f1(), 'o1:f1');
 }
+
+console.log('Prototype chain is more like __proto__.__proto__ than prototype.prototype');
+{
+    function Car() {}
+    eq(Car.__proto__.hasOwnProperty('toString'), true);
+    eq(Object.getPrototypeOf(Car).hasOwnProperty('toString'), true);
+    eq(Car.prototype.hasOwnProperty('toString'), false);
+}
