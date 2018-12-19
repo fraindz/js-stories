@@ -218,32 +218,6 @@ console.log('Custom "ES6bind" implementation');
     eq(baz.a, 2);
 })();
 
-console.log('Lexical this using arrow fns');
-(function() {
-    function foo() {
-        return () => this.a
-    }
-    o1 = { a: 101 };
-    o2 = { a: 202 };
-    bar = foo.call(o1);
-    eq(bar.call(o2), 101);
-})();
-
-console.log('Syntactic replacement of arrow fns using self - Lexical this - part2');
-(function() {
-    function foo() {
-        self = this;
-        boundFn = function () {
-            return self.a;
-        }
-        return boundFn;
-    }
-    o1 = { a: 77 };
-    o2 = { a: 88 };
-    bar = foo.call(o1);
-    eq(bar.call(o2), 77);
-})();
-
 (function () {
     a = 404;
     var o2 = {

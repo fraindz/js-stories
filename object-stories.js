@@ -2,7 +2,8 @@ const assert = require('assert');
 
 const eq = assert.equal;
 
-(function playConstructorFns() {
+{
+    console.log('Constructor function v/s Normal function');
     //Constructor function v/s Normal function
     function Car(model, color)
     {
@@ -18,8 +19,8 @@ const eq = assert.equal;
     objCar.year = 2010;
     eq(objCar.color, "White");
     eq(objCar['year'], 2010);
-    console.log('Create object using constructor fn:', objCar);
-})();
+}
+
 
 (function playClass() {
     //Create objects using es6 class

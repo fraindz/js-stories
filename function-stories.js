@@ -61,9 +61,9 @@ console.log('Tagged template literals are special function calls invoked without
     eq(tagFn `value is ${i} ...`, '[value is , ...][12]');
 }
 
-console.log('Arrow fns assume this to be same as the value of this at invocation place');
+console.log('Arrow fns assume this to be same as the value of this at original invocation place');
 console.log('Arrow fns lexically inherit this from surrounding scope');
-{
+(function (){
     this.a = 11;
     const o = {
         a: 22,
@@ -76,7 +76,46 @@ console.log('Arrow fns lexically inherit this from surrounding scope');
             return innerFn();
         }
     }
-    eq(o.f1(), 22);
-    eq(o.f2(), 11);
-    eq(o.f3(), 22);
+    function testArrowThis() {
+        this.a = 999;
+        eq(o.f1(), 22);
+        eq(o.f2(), 999);
+        eq(o.f3(), 22);    
+    }
+    testArrowThis();
+})();
+
+{
+    console.log('Another example of lexical this using arrow fns');
+        function foo1() {
+            return () => this.a
+        }
+        function foo2() {
+            function innerFn() {
+                return this.a
+            }
+            return innerFn;
+        }
+        o1 = { a: 101 };
+        o2 = { a: 202 };
+        bar = foo1.call(o1);
+        eq(bar.call(o2), 101);
+
+        bar = foo2.call(o1);
+        eq(bar.call(o2), 202);
+}
+
+{
+console.log('Syntactic replacement of arrow fns using self - Lexical this - part2');
+    function foo() {
+        self = this;
+        boundFn = function () {
+            return self.a;
+        }
+        return boundFn;
+    }
+    o1 = { a: 77 };
+    o2 = { a: 88 };
+    bar = foo.call(o1);
+    eq(bar.call(o2), 77);
 }
