@@ -3,49 +3,28 @@ const assert = require('assert');
 const eq = assert.equal;
 
 {
-    console.log('Constructor function v/s Normal function');
-    //Constructor function v/s Normal function
-    function Car(model, color)
-    {
-        this.model = model;
-        this.color = color;
-    }
-
-    const fnCar = Car("Hexa", "White");
-    eq(fnCar, undefined);
-    eq(global.color, "White");
-
-    const objCar = new Car("Hexa", "White");
-    objCar.year = 2010;
-    eq(objCar.color, "White");
-    eq(objCar['year'], 2010);
-}
-
-
-(function playClass() {
-    //Create objects using es6 class
+    console.log('Create object using es6 classes');
     class Car {
         constructor(model, color) {
             this.model = model;
             this.color = color;
         }
     }
-//    Below line throws TypeError: Class constructor Car cannot be invoked without 'new'
-    try {
-      const fnCar = Car("Hexa", "White");
-    } catch(e) {
-        console.log('TypeError : Class constructor cannot be invoked without `new`');
-    }
-
     const objCar = new Car("Hexa", "White");
     objCar.year = 2010;
     eq(objCar.color, "White");
     eq(objCar['year'], 2010);
-    console.log('Create object using es6 classes:', objCar);
-})();
 
-(function playObjectCreate() {
-    //Create objects using Object.create
+    console.log('Class constructor cannot be invoked without `new`');
+    try {
+      const fnCar = Car("Hexa", "White");
+    } catch(e) {
+        console.log('TypeError');
+    }
+}
+
+{
+    console.log('Create object using Object.create');
     const car = Object.create(Object.prototype,
     {
         model: {
@@ -64,45 +43,41 @@ const eq = assert.equal;
     car.year = 2010;
     eq(car.color, "White");
     eq(car['year'], 2010);
-    console.log('Create object using Object.create:', car);
-})();
+}
 
-(function playObjectProperties() {
-    //Object properties
+{
+    console.log('writable=false prop value cannot be changed');
     const car = {
         color: 'White',
         year: 2010
     }
-    //writable
     Object.defineProperty(car, 'year', { writable: false });
     car.year=2013; //Gives error in strict mode
     eq(car.year, 2010);
-    console.log('writable=false prop value cannot be changed');
 
+    console.log('Properties of nested object can be modified even if writable is false');
     car.model = { name: 'Hexa', class: 'VX' }
     Object.defineProperty(car, 'model', { writable: false });
     car.model.class = 'ZX';
     eq(car.model.class, 'ZX');
-    console.log('Properties of nested object can be modified even if writable is false');
 
-    //enumerable
+    console.log('enumerable=false will make property not iterable though can read/write directly');
     Object.defineProperty(car.model, 'class', { enumerable: false });
     eq(Object.keys(car.model).indexOf('name'), 0);
     eq(Object.keys(car.model).indexOf('class'), -1);
     car.model.class = 'AX';
     eq(car.model.class, 'AX');
-    console.log('enumerable=false will make property not iterable though can read/write directly');
 
-    //configurable
+    console.log('configurable=false prop cant be deleted and only writable can be changed enumerable,configurable cant be changed')
     Object.defineProperty(car, 'color', { configurable: false });
     car.color = 'Black'
     Object.defineProperty(car, 'color', { writable: false });
     delete car.color;
     assert.deepEqual(Object.getOwnPropertyDescriptor(car, 'color'), { value: 'Black', configurable: false, enumerable: true, writable: false});
-    console.log('configurable=false prop cant be deleted and only writable can be changed enumerable,configurable cant be changed')
-})();
+}
 
-(function playGetSet() {
+{
+    console.log('All object props can have getter & setter methods to get and set value');
     const car = { model: {name: 'Hexa', class: 'VX'}, color: 'White' };
     Object.defineProperty(car, 'desc',
         {
@@ -118,10 +93,10 @@ const eq = assert.equal;
         });
     car.desc = 'Brezza BX Red'
     eq(car.desc, 'Brezza BX Red');
-    console.log('Can get & set value of multiple properties using getter & setter methods');
-})();
+}
 
-(function playPrototypes() {
+{
+    console.log('Constructor fn prototype is an object that will be _proto_ of all objects instantiated from that function');
     function Car(model, color) {
         this.model = model;
         this.color = color;
@@ -136,24 +111,25 @@ const eq = assert.equal;
     });
     const car1 = new Car('Hexa', 'White');
     eq(Car.prototype === car1.__proto__, true);
-    console.log('Constructor fn prototype is an object that will be _proto_ of all objects instantiated from that function');
 
+    console.log('Prototype properties are not copied to instance but are delegated');
     Car.prototype.seatCapacity = 4;
     eq(Car.prototype.seatCapacity, 4);
     eq(car1.__proto__.seatCapacity, 4);
     eq(car1.seatCapacity, 4);
     eq(car1.hasOwnProperty('seatCapacity'), false);
-    console.log('Prototype properties are not copied to instance but are delegated');
 
+    console.log('New object assigned to prototype will only be reflected on instances created after that');
+    console.log('New objects created after changing prototype will have same _proto_ as changed prototype');
     Car.prototype = { seatCapacity: 2 };
     car4 = new Car('Camry', 'Blue');
     eq(Car.prototype === car1.__proto__, false);
     eq(car1.seatCapacity, 4);
     eq(Car.prototype === car4.__proto__, true);
     eq(car4.seatCapacity, 2);
-    console.log('New object assigned to prototype will only be reflected on instances created after that');
-    console.log('New objects created after changing prototype will have same _proto_ as changed prototype');
 
+    console.log('Prototype prop is added to all instances. Instance prop is specific to instance');
+    console.log('Shadowing1: Data accessor prop found higher on prototype chain with writable:`true` will be added to main object');
     const car2 = new Car('Innova', 'Red');
     eq(car2.hasOwnProperty('seatCapacity'), false);
     car2.seatCapacity = 6
@@ -161,24 +137,23 @@ const eq = assert.equal;
     eq(car2.seatCapacity, 6);
     eq(car1.hasOwnProperty('seatCapacity'), false);
     eq(car2.hasOwnProperty('seatCapacity'), true);
-    console.log('Prototype prop is added to all instances. Instance prop is specific to instance');
-    console.log('Shadowing1: Data accessor prop found higher on prototype chain with writable:`true` will be added to main object');
 
+    console.log('Shadowing2: Data accessor prop found higher on prototype chain with writable:`false` will be ignored(error in strict mode). NO Shadowing');
     Object.defineProperty(Car.prototype, 'seatCapacity', { writable: false });
     c = new Car('Nano', 'Black');
     eq(c.hasOwnProperty('seatCapacity'), false);
     c.seatCapacity = 8;
     eq(c.seatCapacity, 2);
     eq(c.hasOwnProperty('seatCapacity'), false);
-    console.log('Shadowing2: Data accessor prop found higher on prototype chain with writable:`false` will be ignored(error in strict mode). NO Shadowing');
 
+    console.log('Shadowing3: Prop is a setter higher on prototype chain. Always setter will be called. NO Shadowing');
     eq(car1.hasOwnProperty('type'), false);
     eq('type' in car1, true);
     car1.type = 'sedan';
     eq(car1.hasOwnProperty('type'), false);
     eq(car1.type, 'sedan');
-    console.log('Shadowing3: Prop is a setter higher on prototype chain. Always setter will be called. NO Shadowing');
 
+    console.log('Shadowing4: Can force shadow property using defineProperty');
     const car3 = new Car('Brezza', 'Blue');
     eq(car3.hasOwnProperty('seatCapacity'), false);
     eq(car3.hasOwnProperty('type'), false);
@@ -192,8 +167,8 @@ const eq = assert.equal;
     eq(car3.type, 'Sedan');
     eq(car3.hasOwnProperty('seatCapacity'), true);
     eq(car3.hasOwnProperty('type'), true);
-    console.log('Shadowing4: Can force shadow property using defineProperty');
 
+    console.log('Shadowing5: Implicit shadowing')
     Car.prototype.tyre = 4;
     c = new Car('Nano', 'Red');
     eq(c.hasOwnProperty('tyre'), false);
@@ -201,10 +176,9 @@ const eq = assert.equal;
     c.tyre++;
     eq(c.hasOwnProperty('tyre'), true);
     eq(c.tyre, 5);
-    console.log('Shadowing5: Implicit shadowing')
-})();
+}
 
-(function playPrototypeChainUsingFn() {
+{
     console.log('Prototype chain created with functions adds prototype props with enumerable=true');
     function Vehicle(speed) {
         this.speed = speed || 0;
@@ -212,19 +186,10 @@ const eq = assert.equal;
     Vehicle.prototype.start = function() {
         console.log(this.speed);
     }
-    function Car(model, speed) {
-        Vehicle.call(this, speed);
-        this.model = model;
-    }
-    Object.setPrototypeOf(Car.prototype, Vehicle.prototype);
-
-    const car1 = new Car('Hexa', 40);
-    eq(car1.__proto__ === Car.prototype, true);
-    eq(car1.__proto__.__proto__ === Vehicle.prototype, true);
     eq(Object.getOwnPropertyDescriptor(Vehicle.prototype,'start').enumerable, true);
-})();
+}
 
-(function playPrototypeChainUsingClass() {
+{
     console.log('Prototype chain created with class adds prototype props with enumerable=false');
     class Vehicle {
         constructor(speed) {
@@ -234,51 +199,41 @@ const eq = assert.equal;
             console.log(this.speed);
         }
     }
-    class Car extends Vehicle {
-        constructor(model, speed) {
-            super(speed)
-            this.model = model;
-        }
-    }
-
-    const car1 = new Car('Hexa', 40);
-    eq(car1.__proto__ === Car.prototype, true);
-    eq(car1.__proto__.__proto__ === Vehicle.prototype, true);
     eq(Object.getOwnPropertyDescriptor(Vehicle.prototype,'start').enumerable, false);
-})();
+}
 
-(function() {
+{
     console.log('Parent - Child link(via Delegation) is created on prototype object AND NOT on actual object');
     function Parent() {}
     function Child() {}
     Child.prototype = Object.create(Parent.prototype);
+
+    eq(Parent.isPrototypeOf(Child), false);
+
+    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
     eq(Child instanceof Parent, false);
     eq(Child.prototype instanceof Parent, true);
-    eq(Parent.isPrototypeOf(Child), false);
-    eq(Parent.isPrototypeOf(Child.prototype), false);
-    eq(Parent.prototype.isPrototypeOf(Child), false);
-    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
 
     a = new Child();
     eq(a instanceof Child, true);
     eq(a instanceof Parent, true);
-})();
+}
 
-(function() {
+{
     console.log('Parent - Child link(via Class) is created on prototype object AND ALSO on actual object');
     class Parent {}
     class Child extends Parent { }
+
+    eq(Parent.isPrototypeOf(Child), true);
+
+    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
     eq(Child instanceof Parent, false);
     eq(Child.prototype instanceof Parent, true);
-    eq(Parent.isPrototypeOf(Child), true);
-    eq(Parent.isPrototypeOf(Child.prototype), false);
-    eq(Parent.prototype.isPrototypeOf(Child), false);
-    eq(Parent.prototype.isPrototypeOf(Child.prototype), true);
 
     a = new Child();
     eq(a instanceof Child, true);
     eq(a instanceof Parent, true);
-})();
+}
 
 console.log('super can be used in consice functions of plain objects');
 {

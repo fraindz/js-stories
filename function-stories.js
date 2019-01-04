@@ -2,6 +2,25 @@ const assert = require('assert');
 
 const eq = assert.equal;
 
+{
+    console.log('Constructor function v/s Normal function');
+    //Constructor function v/s Normal function
+    function Car(model, color)
+    {
+        this.model = model;
+        this.color = color;
+    }
+
+    const fnCar = Car("Hexa", "White");
+    eq(fnCar, undefined);
+    eq(global.color, "White");
+
+    const objCar = new Car("Hexa", "White");
+    objCar.year = 2010;
+    eq(objCar.color, "White");
+    eq(objCar['year'], 2010);
+}
+
 console.log('DEMO IIFE - Immediately Invoked Function Expression. Function with params executed on declaration.');
 const iife = (function playIIFE(param1, param2, param3) {
     const iifeLocalParam = param1 + ' ' + param2 + ' ' + param3;
