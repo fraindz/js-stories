@@ -4,7 +4,6 @@ const eq = assert.equal;
 
 {
     console.log('Constructor function v/s Normal function');
-    //Constructor function v/s Normal function
     function Car(model, color)
     {
         this.model = model;
@@ -21,7 +20,7 @@ const eq = assert.equal;
     eq(objCar['year'], 2010);
 }
 
-console.log('DEMO IIFE - Immediately Invoked Function Expression. Function with params executed on declaration.');
+console.log('IIFE - Immediately Invoked Function Expression. Function with params executed on declaration');
 const iife = (function playIIFE(param1, param2, param3) {
     const iifeLocalParam = param1 + ' ' + param2 + ' ' + param3;
     function getIIFELocal() {
@@ -30,20 +29,20 @@ const iife = (function playIIFE(param1, param2, param3) {
     return { getIIFELocal };
 })('Param1', 2, true);
 
-console.log('DEMO Closure - Local function value accessible outside the function');
+console.log('Closure - Local function value(i.e. iifeLocalParam) accessible outside the function');
 assert.deepEqual(iife.getIIFELocal(), 'Param1 2 true');
 
-(function playFunctionMethods() {
-    //Apply
-    console.log('Call array methods on objects using "apply"');
+{
+    console.log('Call array methods on objects using `apply`');
     const o = {0:'Zero', 1:'One', length:2};
     Array.prototype.push.call(o, 'Two');
     assert.deepEqual(o, {0:'Zero', 1:'One', 2:'Two', length:3});
 
-    console.log('Call built-in methods with variable args using "apply"');
+    console.log('Call built-in methods with variable args using `apply`');
     const arr = [12, 2, 55, 89, 33];
     eq(Math.max.apply(null, arr), 89);
 
+    console.log('Create prototype chain using `apply`');
     function Product(name, price) {
         this.name = name;
         this.price = price;
@@ -65,11 +64,11 @@ assert.deepEqual(iife.getIIFELocal(), 'Param1 2 true');
     const toy1 = new Toy('robot', 100);
     eq(toy1.name, 'robot');
     eq(toy1.price, 100);
-    console.log('Prototype chain created using "apply"');
     eq(Math.trunc(toy1.priceWithTax()),120);
-    console.log('Call parent method by passing context of child using function method "call"');
+
+    console.log('Method overriding using `call`. Call parent method by passing context of child');
     eq(Math.trunc(Product.prototype.priceWithTax.call(toy1)),110);
-})();
+};
 
 console.log('Tagged template literals are special function calls invoked without parenthesis "("');
 {
@@ -105,7 +104,7 @@ console.log('Arrow fns lexically inherit this from surrounding scope');
 })();
 
 {
-    console.log('Another example of lexical this using arrow fns');
+    console.log('Demo - Difference in behaviour of arrow fn & regular fn');
         function foo1() {
             return () => this.a
         }
@@ -125,7 +124,7 @@ console.log('Arrow fns lexically inherit this from surrounding scope');
 }
 
 {
-console.log('Syntactic replacement of arrow fns using self - Lexical this - part2');
+console.log('Syntactic alternative of arrow fns using self');
     function foo() {
         self = this;
         boundFn = function () {
