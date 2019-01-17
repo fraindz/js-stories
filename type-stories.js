@@ -78,7 +78,7 @@ console.log('Prototype of object subtypes(Array and Function) is the subtype its
 eq(typeof Function.prototype, 'function');
 eq(Array.isArray(Array.prototype), true);
 
-console.log('JSON converts undefined, function, recursive prop access to null');
+console.log('JSON stringify converts undefined, function, recursive prop access to null');
 eq(JSON.stringify(42), "42");
 eq(JSON.stringify("42"), "\"42\"");
 eq(JSON.stringify([111, undefined, function() {}, 444]), "[111,null,null,444]");
@@ -94,10 +94,10 @@ eq(JSON.stringify(o1), "{\"newProp\":111,\"b\":22}");
 console.log('JSON stringify explicit coercion using replacer array');
 eq(JSON.stringify(o1, ['b', 'newProp1']), "{\"b\":22}");
 
-console.log('JSON stringify explicit coercion using replacer function stills refers output of toJSON');
+console.log('JSON stringify explicit coercion using toJSON gets precedence over replacer function');
 eq(JSON.stringify(o1, function(k, v) { return k!=='b'? v:undefined }), '{"newProp":111}');
 
-console.log('Parsing is tolerant while Coercion is intolerant');
+console.log('parseInt is tolerant while coercion is intolerant');
 a = '131';
 b = '131aa';
 eq(Number(a), 131);
@@ -105,14 +105,14 @@ eq(parseInt(a), 131);
 eq(Number.isNaN(Number(b)), true);
 eq(parseInt(b), 131);
 
-console.log('Implicit coercion of + operator');
+console.log('Implicit coercion examples of + operator');
 eq("13"+"0", "130");
 eq(13+0, 13);
 eq(13+"13","1313");
 eq([1,2]+[3,4],"1,23,4");
 eq(2+true, 3);
 
-console.log('string coercion using + depends on valueOf and using String depends on toString ');
+console.log('string coercion using + depends on valueOf and using String() depends on toString');
 a = {
     valueOf: () => 13,
     toString: () => 22
@@ -126,7 +126,7 @@ eq("3"*1, 3);
 eq("3"/"1",3);
 eq([3]-[2],1);
 
-console.log('Implement onlyOneTrue using boolean coercion with !!');
+console.log('Usage of !! - Implement onlyOneTrue function');
 function onlyOneTrue() {
     var sum = 0;
     for(var i=0; i<arguments.length; i++) {

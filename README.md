@@ -1,7 +1,7 @@
 # js-stories
 A collection of various java script stories(practical samples) that explain &amp; demonstrate core java script concepts.
 
-[Array Stories](./type-stories.js)
+[Type Stories](./type-stories.js)
 1. typeof 42 is `number` and typeof `number` is string
 2. typeof null is `object` because of bug
 3. typeof undeclared or unassigned variable is also `undefined`
@@ -15,6 +15,18 @@ A collection of various java script stories(practical samples) that explain &amp
 11. Array constructor function behaves differently based on number of arguments
 12. Symbols - Demo
 13. Prototype of object subtypes(Array and Function) is the subtype itself
+14. JSON stringify converts undefined, function, recursive prop access to null
+15. JSON stringify implicit coercion using toJSON
+16. JSON stringify explicit coercion using replacer array
+17. JSON stringify explicit coercion using toJSON gets precedence over replacer function
+18. parseInt is tolerant while coercion is intolerant
+19. Implicit coercion examples of + operator
+20. string coercion using + depends on valueOf and using String() depends on toString
+21. operators -,*,/ always coerce the operands to number
+22. Usage of !! - Implement onlyOneTrue function
+23. Operators || and && always return value of one of the two operands
+24. JS coercion gotchas
+25. Javascript ,(comma) operator executes all expressions and returns the last one
 
 [Function Stories](./function-stories.js)
 1. Constructor function v/s Normal function
@@ -55,3 +67,23 @@ A collection of various java script stories(practical samples) that explain &amp
 22. Parent - Child link(via Class) is created on prototype object AND ALSO on actual object
 23. super can be used in consice functions of plain objects
 24. Prototype chain is more like __proto__.__proto__ than prototype.prototype
+
+[this Stories](./this-stories.js)
+1. Global object default binding is disabled in strict mode
+2. Global variables bound to global object in non-strict mode
+3. Implicit binding example
+4. Implicit binding is lost when function is passed as parameter
+5. Hard binding does not lose `this` context
+6. Complete hard binding demo - Argument pass through and return value
+7. Implement custom `bind` method using `apply`
+8. Constructor with object as return value overwrites the new object
+9. Explicit binding takes precedence over implicit binding
+10. `new` binding takes precedence over implicit binding
+11. Explicit binding takes precedence over `new` binding
+12. Proper custom `bind` implementation
+13. Custom bind implementation (hacky one)
+14. Implement partially applied(curried) functions using custom bind
+15. Custom "ES6bind" implementation
+16. Function reference when evaluated loses the context
+17. Cannot call an arrow function with `new`
+18. Cannot return primitives from a function when called with `new`

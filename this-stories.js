@@ -10,16 +10,14 @@ a = 2;
 console.log('Default binding');
 (function() {
     "use strict";
-    try {
-        console.log(this.a);
-    } catch(Error) {
-        console.log("Global object default binding disabled in strict mode")
-    }
-    eq(foo(), 2);
+    console.log("Global object default binding is disabled in strict mode")
+    assert.throws(() => this.a, TypeError);
+
     console.log("Global variables bound to global object in non-strict mode")
+    eq(foo(), 2);
 })();
 
-console.log('Implicit binding...');
+console.log('Implicit binding example');
 var o2 = {
     a: 42,
     foo: foo
@@ -32,6 +30,7 @@ var o1 = {
 
 eq(o1.o2.foo(), 42);
 
+console.log('Implicit binding is lost when function is passed as parameter');
 function doFoo(fn) {
     return fn()+1;
 }
@@ -42,8 +41,9 @@ const implicitObj = {
 }
 a = 100;
 eq(doFoo(implicitObj.foo), 101);
-console.log('Implicit binding lost...');
 
+console.log('Hard binding does not lose `this` context');
+console.log('Complete hard binding demo - Argument pass through and return value');
 const hardBindObj = {
     a: 200
 };
@@ -54,7 +54,6 @@ bar = function() {
 }
 eq(bar(), 200);
 eq(bar.call(global), 200);
-console.log('Hard binding does not lose "this" context');
 
 function completeBindFoo() {
     return this.a + arguments[0];
@@ -64,8 +63,8 @@ bar = function() {
     return completeBindFoo.apply(hardBindObj, arguments);
 }
 eq(bar(22), 222);
-console.log('Complete hard binding demo - Argument pass through and return value');
 
+console.log('Implement custom `bind` method using `apply`');
 function bind(fn, o) {
     return function () {
         return fn.apply(o, arguments);
@@ -73,18 +72,6 @@ function bind(fn, o) {
 }
 bar = bind(completeBindFoo, hardBindObj);
 eq(bar(33), 233);
-console.log('Implement custom "Bind" method');
-
-function contextBasedFoo(el) {
-    this.a = this.a + el;
-}
-a=100;
-o = {
-    a: 1
-};
-
-[5].forEach(contextBasedFoo, o);
-eq(o.a, 6);
 
 console.log('Constructor with object as return value overwrites the new object');
 function constructorFn(arg1){
@@ -96,7 +83,8 @@ assert.deepEqual(bar, {a: 555});
 
 console.log('Precedence in binding methods...');
 (function () {
-    function foo(arg1) {
+   console.log('Explicit binding takes precedence over implicit binding');
+   function foo(arg1) {
         this.a = arg1 || this.a;
         return this.a;
     }
@@ -112,25 +100,24 @@ console.log('Precedence in binding methods...');
     eq(o2.foo(), 222);
     eq(o1.foo.call(o2), 222);
     eq(o2.foo.call(o1), 111);
-    console.log('Explicit binding takes precedence over implicit binding');
-
+ 
+    console.log('`new` binding takes precedence over implicit binding');
     o1.foo(999);
     eq(o1.a, 999);
     bar = new o1.foo(555);
     eq(o1.a, 999);
     eq(bar.a, 555);
-    console.log('New binding takes precedence over implicit binding');
 
+    console.log('Explicit binding takes precedence over `new` binding');
     bar = foo.bind(o1);
     bar(202);
     eq(o1.a, 202);
     tin = new bar(303);
     eq(o1.a, 202);
     eq(tin.a, 303);
-    console.log('Explicit binding takes precedence over "New" binding');
 })();
 
-console.log('Custom "bind" implementation');
+console.log('Proper custom `bind` implementation');
 (function() {
     function foo(arg1) {
         this.a = arg1;
@@ -183,10 +170,11 @@ function multiply(x, y) {
     return x * y;
 }
 
+
+console.log('Implement partially applied(curried) functions using custom bind');
 const multiplyBy2 = multiply.bind(null, 2);
 const multiplyBy5 = multiply.bind(null, 5);
 eq(multiplyBy2(3), 6);
-console.log('Custom bind demos partially applied(curried) functions');
 
 console.log('Custom "ES6bind" implementation');
 (function() {
@@ -218,6 +206,7 @@ console.log('Custom "ES6bind" implementation');
     eq(baz.a, 2);
 })();
 
+console.log('Function reference when evaluated loses the context');
 (function () {
     a = 404;
     var o2 = {
@@ -235,16 +224,16 @@ console.log('Custom "ES6bind" implementation');
 
     new Promise(() => setTimeout(o2.foo, 111))
     .then(() => eq(a, 408));
-    console.log('Function reference when evaluated loses the context');
 })();
 
-console.log('You cant call an arrow function with new');
+console.log('Cannot call an arrow function with `new`');
 {
     let f1 = () => {
     }
     assert.throws(() => new f1(), TypeError);
 }
-console.log('You cant return primitives from a function when called with new');
+
+console.log('Cannot return primitives from a function when called with `new`');
 {
     function f1() {
         return "x";
