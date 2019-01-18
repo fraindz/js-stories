@@ -87,3 +87,23 @@ A collection of various java script stories(practical samples) that explain &amp
 16. Function reference when evaluated loses the context
 17. Cannot call an arrow function with `new`
 18. Cannot return primitives from a function when called with `new`
+
+[generator Stories](./generator-stories.js)
+1. Iterate through array values manually using Symbol.iterator
+2. Iterating through last value still returns done:false
+3. next() returns done:true when trying to fetch again after last value is fetched
+4. Symbol.iterator returns new instance of iterator each time
+5. Calling next on exhausted iterator returns {value: undefined, done: true}
+6. Custom iterator to infinitely loop through even numbers
+7. Use `return` to notify producer that consumption is over
+8. Demo - `yield` & `return`
+9. `return` value is accessible when explicitly iterated
+10. `return` value NOT accessible when auto nexting
+11. Consumer can free generator midway if consumption is over
+12. Demo - Generators yielding to Promise based async methods
+13. Generator can accept values passed from iterators
+14. Iterator resumes executing generator after completing assignment of previous yield
+15. Generator can generate infinite values
+16. Babel transpiled version of generator function
+17. yield* delegates to first generator or iterable object
+18. Generate fibo series using recursion via yield*
