@@ -41,6 +41,7 @@ A collection of various java script stories(practical samples) that explain &amp
 10. Arrow fns lexically inherit this from surrounding scope
 11. Demo - Difference in behaviour of arrow fn & regular fn
 12. Syntactic alternative of arrow fns using self
+13. Use static variables in javascript function to implement singleton pattern(without `static` or `class` keyword)
 
 [Object Stories](./object-stories.js)
 1. Create object using es6 classes

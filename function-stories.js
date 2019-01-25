@@ -137,3 +137,16 @@ console.log('Syntactic alternative of arrow fns using self');
     bar = foo.call(o1);
     eq(bar.call(o2), 77);
 }
+{
+    console.log('Use static variables in javascript function to implement singleton pattern(without `static` or `class` keyword)');
+    function getLogger() {
+        if(!getLogger.logger) {
+            getLogger.logger = {
+                type: "console",
+                log: console.log
+            }
+        }
+        return getLogger.logger
+    }
+    eq(getLogger().type, "console");
+}
