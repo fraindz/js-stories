@@ -27,6 +27,8 @@ A collection of various java script stories(practical samples) that explain &amp
 23. Operators || and && always return value of one of the two operands
 24. JS coercion gotchas
 25. Javascript ,(comma) operator executes all expressions and returns the last one
+26. Array created via constructor only sets length property, indices are not initialized
+27. Array higher order functions(map, filter, forEach) only iterate through indices that are initialized
 
 [Function Stories](./function-stories.js)
 1. Constructor function v/s Normal function
@@ -42,6 +44,7 @@ A collection of various java script stories(practical samples) that explain &amp
 11. Demo - Difference in behaviour of arrow fn & regular fn
 12. Syntactic alternative of arrow fns using self
 13. Use static variables in javascript function to implement singleton pattern(without `static` or `class` keyword)
+14. Static functions are not directly accessible to instances
 
 [Object Stories](./object-stories.js)
 1. Create object using es6 classes

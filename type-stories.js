@@ -168,3 +168,12 @@ eq(o1>=o2, true);
 
 console.log('Javascript ,(comma) operator executes all expressions and returns the last one');
 eq((q=1, console.log(q), ++q), 2);
+
+{
+    console.log('Array created via constructor only sets length property, indices are not initialized');
+    const cntr = 0;
+    const arr = Array(100).map((_, i) => (cntr++, i));
+    eq(arr[0], undefined);
+    console.log('Array higher order functions(map, filter, forEach) only iterate through indices that are initialized');
+    eq(cntr, 0);
+}

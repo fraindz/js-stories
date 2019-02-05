@@ -150,3 +150,13 @@ console.log('Syntactic alternative of arrow fns using self');
     }
     eq(getLogger().type, "console");
 }
+{
+    console.log('Static functions are not directly accessible to instances');
+    class A {
+        static m1() {}
+        m2() {}
+    }
+    a = new A();
+    eq(typeof a.m1, "undefined");
+    eq(typeof a.m2, "function");
+}
